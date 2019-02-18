@@ -34,7 +34,7 @@ describe('BurpProcessor tests', function() {
     clearFiles();
     copyFiles();
     config = {
-      sourcePath: sourcePath,
+      sourcePath: targetPath,
       globPattern: '**/*.brs',
       replacements: []
     };
@@ -49,7 +49,12 @@ describe('BurpProcessor tests', function() {
 
   describe('Process files valid test', function() {
     it('tests file creation', () => {
-      processor.processFiles();
+      config.replacements = [{
+        regex: '(^.*\\?\\s*\\")',
+        replacement: '$1#FileName#.#FunctionName#(#LineNumber#) '
+      }];
+      let result = processor.processFiles();
+      expect(result).to.be.true;
     });
   });
 });

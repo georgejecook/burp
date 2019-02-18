@@ -20,16 +20,16 @@ export default class BurpProcessor {
       throw new Error('sourcePath is empty');
     }
     this._config = config;
-    console.log('Starting directory: ' + process.cwd());
+    console.log(`Starting directory: ${process.cwd()} sourcePath ${this._config.sourcePath}`);
     try {
       process.chdir(this._config.sourcePath);
     } catch (err) {
       console.log('Could not change directory to source path: ' + err);
     }
+    console.log('Set working directory to : ' + process.cwd());
     this._warnings = [];
     this._errors = [];
     this._config.globPattern = this._config.globPattern || '**/*.brs';
-    this.processFiles();
   }
 
   private readonly _config: BurpConfig;
@@ -44,20 +44,24 @@ export default class BurpProcessor {
     return this._warnings;
   }
 
-  public processFiles() {
+  public processFiles(): boolean {
     debug(`Running burp at path ${this._config.sourcePath} `);
     debug(`processing files at path ${process.cwd()} `);
     let fileProcessor = new FileProcessor(this._config);
-    glob.readdirStream(this._config.globPattern)
-      .on('data', (file) => {
-        const fileDescriptor = new FileDescriptor(file.dirname, file.basename, file.extname.toLowerCase());
-        fileProcessor.processFile(fileDescriptor);
-      });
+    let files = glob.readdirSync(this._config.globPattern);
+    files.forEach( (file) => {
+      const fileDescriptor = new FileDescriptor(path.dirname(path.resolve(file)), path.basename(file), path.extname(file).toLowerCase());
+      let result = fileProcessor.processFile(fileDescriptor);
+      console.log(` processed file ${fileDescriptor.fullPath} result: ${result}`);
+      this.errors.concat(fileProcessor.errors);
+      this.warnings.concat(fileProcessor.warnings);
+    });
 
     this.errors.concat(this.errors);
     this.warnings.concat(this.warnings);
     this.reportErrors();
     this.reportWarnings();
+    return this.reportErrors.length === 0;
   }
 
   public reportErrors() {

@@ -50,6 +50,7 @@ export class FileProcessor {
     let packagePath = filePath = fileDescriptor.getPackagePath('');
     let functionName: string = NO_FUNCTION;
     let isInFunction = false;
+    let isDirty = false;
 
     for (let lineNumber = 1; lineNumber <= lines.length; lineNumber++) {
       currentLocation = filePath + ':' + lineNumber.toString();
@@ -72,6 +73,7 @@ export class FileProcessor {
           if (line.match(replacement.regex)) {
             line = `'${line}`;
           }
+          isDirty = true;
         } else if (line.match(replacement._regex)) {
           let replacementValue = replacement.replacement;
           replacementValue = replacementValue.replace(MacroValue.FileName, filename);
@@ -80,12 +82,16 @@ export class FileProcessor {
           replacementValue = replacementValue.replace(MacroValue.LineNumber, lineNumber.toString().trim());
           replacementValue = replacementValue.replace(MacroValue.FullLocation,`${packagePath}(${lineNumber.toString()}).${functionName}`);
           line = line.replace(replacement._regex, replacementValue);
+          isDirty = true;
         }
         //DO the regex match here
       });
       lines[lineNumber - 1] = line;
     }
-    fileDescriptor.setFileContents(lines.join(os.EOL));
+    if (isDirty) {
+      fileDescriptor.setFileContents(lines.join(os.EOL));
+      fileDescriptor.saveFileContents();
+    }
     return true;
   }
 

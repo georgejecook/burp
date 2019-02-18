@@ -6,3 +6,11 @@ export enum MacroValue {
   CommentLine = '#CommentLine#',
   FullLocation = '#Location#'
 }
+
+
+ - `#FullPath#`
+ - `#LineNumber#`
+ - `#FileName#`
+ - `#FunctionName#`
+ - `#CommentLine#`
+ - `#Location`
