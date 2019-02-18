@@ -1,5 +1,6 @@
 import * as chai from 'chai';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 
 import { expect } from 'chai';
 
@@ -11,7 +12,7 @@ let dircompare = require('dir-compare');
 
 chai.use(chaiSubset);
 let processor: BurpProcessor;
-let sourcePath = 'src/test/stubProject';
+let sourcePath = path.resolve(__dirname, '../test/stubProject');
 let testsPath = 'build/source/tests';
 let targetPath = 'build';
 

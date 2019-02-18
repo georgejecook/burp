@@ -3,6 +3,7 @@ import * as fs from 'fs-extra';
 
 import { expect } from 'chai';
 
+import * as path from 'path';
 import FileDescriptor from './FileDescriptor';
 import { FileProcessor } from './FileProcessor';
 
@@ -10,7 +11,7 @@ const chaiSubset = require('chai-subset');
 
 chai.use(chaiSubset);
 let processor: FileProcessor;
-let sourcePath = 'src/test/stubProject';
+let sourcePath = path.resolve(__dirname, '../test/stubProject');
 let targetPath = 'build';
 
 function clearFiles() {
@@ -31,7 +32,7 @@ describe('FileProcessor tests', function() {
     clearFiles();
     copyFiles();
     config = {
-      sourcePath: sourcePath,
+      sourcePath: targetPath,
       globPattern: '**/*.brs',
       replacements: []
     };
@@ -70,7 +71,7 @@ describe('FileProcessor tests', function() {
       clearFiles();
       copyFiles();
       config = {
-        sourcePath: sourcePath,
+        sourcePath: targetPath,
         globPattern: '**/*.brs',
         replacements: []
       };

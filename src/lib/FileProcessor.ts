@@ -80,7 +80,7 @@ export class FileProcessor {
           replacementValue = replacementValue.replace(MacroValue.FullPath, `${packagePath}(${lineNumber.toString()})`);
           replacementValue = replacementValue.replace(MacroValue.FunctionName, functionName);
           replacementValue = replacementValue.replace(MacroValue.LineNumber, lineNumber.toString().trim());
-          replacementValue = replacementValue.replace(MacroValue.FullLocation,`${packagePath}(${lineNumber.toString()}).${functionName}`);
+          replacementValue = replacementValue.replace(MacroValue.FullLocation, `${packagePath}(${lineNumber.toString()}).${functionName}`);
           line = line.replace(replacement._regex, replacementValue);
           isDirty = true;
         }
