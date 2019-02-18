@@ -5,6 +5,8 @@ Burp - Lightweight script processing for Roku brightscript projects
   Version 0.1.0
 </p>
 
+[![codecov](https://codecov.io/gh/georgejecook/burp/branch/master/graph/badge.svg)](https://codecov.io/gh/georgejecook/burp) [![Build Status](https://travis-ci.org/georgejecook/burp.svg?branch=master)](https://travis-ci.org/georgejecook/burp)
+ 
 ## Links
  - **[Documentation](documentation)**
  - **[Release notes / History / Changes](CHANGELOG.md)**
