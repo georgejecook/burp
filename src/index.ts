@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import BurpProcessor from './lib/BurpProcessor';
 import { BurpConfig } from './lib/BurpConfig';
+import BurpProcessor from './lib/BurpProcessor';
 const program = require('commander');
 const fs = require('fs');
 const pkg = require('../package.json');
