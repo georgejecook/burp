@@ -9,7 +9,7 @@ program
   .description('Brightscript Burp Preprocessor');
 
 program
-  .command('process <sourcePath> <globPattern>')
+  .command('process <configPath> ')
   .alias('p')
   .description(`
   processes a brightscript SceneGraph project and apply regex replacements

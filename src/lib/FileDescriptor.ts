@@ -29,8 +29,9 @@ export default class FileDescriptor {
     return path.join(this.directory, this.filename);
   }
 
-  public getPackagePath(projectRoot: string) {
+  public getPackagePath(projectRoot: string, cwd: string) {
     let pkgPath = `pkg:${this.fullPath.replace(projectRoot, '')}`;
+    pkgPath = pkgPath.replace(cwd, '');
     return pkgPath.replace('pkg://', 'pkg:/');
   }
 

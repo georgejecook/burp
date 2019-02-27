@@ -64,7 +64,7 @@ describe('File Descriptor', function() {
       ];
       testParams.forEach( (param) => {
         const file = new FileDescriptor(param.path, 'test.brs', '.brs');
-        expect(file.getPackagePath(param.rootPath)).to.equal('pkg:/source/test.brs');
+        expect(file.getPackagePath(param.rootPath, process.cwd())).to.equal('pkg:/source/test.brs');
       });
     });
   });

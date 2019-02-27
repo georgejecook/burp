@@ -48,6 +48,7 @@ export default class BurpProcessor {
     debug(`Running burp at path ${this._config.sourcePath} `);
     debug(`processing files at path ${process.cwd()} `);
     let fileProcessor = new FileProcessor(this._config);
+    fileProcessor.rootPath = process.cwd();
     let files = glob.readdirSync(this._config.globPattern);
     files.forEach( (file) => {
       const fileDescriptor = new FileDescriptor(path.dirname(path.resolve(file)), path.basename(file), path.extname(file).toLowerCase());

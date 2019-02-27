@@ -9,6 +9,7 @@ const debug = Debug('FileProcessor');
 const NO_FUNCTION = 'NoFunction';
 
 export class FileProcessor {
+  rootPath: string;
   constructor(config: BurpConfig) {
     this.functionNameRegex = new RegExp('^\\s*(function|sub)\\s*([0-9a-z_]*)s*\\(', 'i');
     this.functionEndRegex = new RegExp('^\s*(end sub|end function)', 'i');
@@ -47,7 +48,7 @@ export class FileProcessor {
     let currentLocation = '';
     let lines = code.split(/\r?\n/);
     let filePath = fileDescriptor.fullPath;
-    let packagePath = filePath = fileDescriptor.getPackagePath('');
+    let packagePath = filePath = fileDescriptor.getPackagePath('', this.rootPath);
     let functionName: string = NO_FUNCTION;
     let isInFunction = false;
     let isDirty = false;
