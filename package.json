@@ -1,6 +1,6 @@
 {
   "name": "burp-brightscript",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "lightweight processor for roku brightscript projects",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
