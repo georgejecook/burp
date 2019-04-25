@@ -3,13 +3,21 @@ import * as Debug from 'debug';
 import { BurpConfig } from './BurpConfig';
 import FileDescriptor from './FileDescriptor';
 import { MacroValue } from './MacroValue';
+
 const os = require('os');
 
 const debug = Debug('FileProcessor');
 const NO_FUNCTION = 'NoFunction';
 
 export class FileProcessor {
-  rootPath: string;
+
+  public get errors(): string[] {
+    return this._errors;
+  }
+
+  public get warnings(): string[] {
+    return this._warnings;
+  }
   constructor(config: BurpConfig) {
     this.functionNameRegex = new RegExp('^\\s*(function|sub)\\s*([0-9a-z_]*)s*\\(', 'i');
     this.functionEndRegex = new RegExp('^\s*(end sub|end function)', 'i');
@@ -20,6 +28,7 @@ export class FileProcessor {
       replacement._regex = new RegExp(replacement.regex, 'i');
     });
   }
+  public rootPath: string;
 
   private readonly _warnings: string[];
   private readonly _errors: string[];
@@ -27,14 +36,6 @@ export class FileProcessor {
 
   private functionEndRegex: RegExp;
   private functionNameRegex: RegExp;
-
-  public get errors(): string[] {
-    return this._errors;
-  }
-
-  public get warnings(): string[] {
-    return this._warnings;
-  }
 
   public processFile(fileDescriptor: FileDescriptor): boolean {
     let code = fileDescriptor ? fileDescriptor.fileContents : null;

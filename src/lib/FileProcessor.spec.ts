@@ -4,6 +4,7 @@ import * as fs from 'fs-extra';
 import { expect } from 'chai';
 
 import * as path from 'path';
+
 import FileDescriptor from './FileDescriptor';
 import { FileProcessor } from './FileProcessor';
 

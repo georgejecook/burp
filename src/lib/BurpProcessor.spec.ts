@@ -5,7 +5,7 @@ import * as path from 'path';
 import { expect } from 'chai';
 
 import { BurpConfig } from './BurpConfig';
-import BurpProcessor from './BurpProcessor';
+import { BurpProcessor } from './BurpProcessor';
 
 const chaiSubset = require('chai-subset');
 let dircompare = require('dir-compare');

@@ -8,9 +8,9 @@ import FileDescriptor from './FileDescriptor';
 import { FileProcessor } from './FileProcessor';
 
 const debug = Debug('Burp');
-const glob = require('glob-fs')({ gitignore: true });
+const glob = require('glob-all');
 
-export default class BurpProcessor {
+export class BurpProcessor {
   constructor(config: BurpConfig) {
     if (!config) {
       throw new Error('config is empty');
@@ -25,7 +25,9 @@ export default class BurpProcessor {
       process.chdir(this._config.sourcePath);
     } catch (err) {
       console.log('Could not change directory to source path: ' + err);
+      throw new Error('Aborting');
     }
+    this._rootPath = process.cwd();
     console.log('Set working directory to : ' + process.cwd());
     this._warnings = [];
     this._errors = [];
@@ -35,6 +37,7 @@ export default class BurpProcessor {
   private readonly _config: BurpConfig;
   private readonly _warnings: string[];
   private readonly _errors: string[];
+  private readonly _rootPath: string;
 
   get errors(): string[] {
     return this._errors;
@@ -45,15 +48,18 @@ export default class BurpProcessor {
   }
 
   public processFiles(): boolean {
-    debug(`Running burp at path ${this._config.sourcePath} `);
-    debug(`processing files at path ${process.cwd()} `);
+    debug(`Running Config is ${this._config} `);
+    debug( `path ${this._config.sourcePath} `);
+    debug(`rootpath ${this._rootPath} `);
+
     let fileProcessor = new FileProcessor(this._config);
     fileProcessor.rootPath = process.cwd();
-    let files = glob.readdirSync(this._config.globPattern);
+    let files = glob.sync(this._config.globPattern);
     files.forEach( (file) => {
+      debug(`file ${file}, ${path.resolve(file)}`);
       const fileDescriptor = new FileDescriptor(path.dirname(path.resolve(file)), path.basename(file), path.extname(file).toLowerCase());
       let result = fileProcessor.processFile(fileDescriptor);
-      console.log(` processed file ${fileDescriptor.fullPath} result: ${result}`);
+      debug(` processed file ${fileDescriptor.fullPath} result: ${result}`);
       this.errors.concat(fileProcessor.errors);
       this.warnings.concat(fileProcessor.warnings);
     });
@@ -68,13 +74,13 @@ export default class BurpProcessor {
   public reportErrors() {
     if (this.errors.length > 0) {
 
-      console.log(`
+      debug(`
     The following errors occurred during processing:
 
     ======
     `);
-      this.errors.forEach( (errorText) => console.log(`[ERROR] ${errorText}`));
-      console.log(`
+      this.errors.forEach( (errorText) => debug(`[ERROR] ${errorText}`));
+      debug(`
     ======
     `);
     }
@@ -83,13 +89,13 @@ export default class BurpProcessor {
   public reportWarnings() {
     if (this.warnings.length > 0) {
 
-      console.log(`
+      debug(`
     The following warnings occurred during processing:
 
     ======
     `);
-      this.warnings.forEach( (errorText) => console.log(`[WARN] ${errorText}`));
-      console.log(`
+      this.warnings.forEach( (errorText) => debug(`[WARN] ${errorText}`));
+      debug(`
     ======
     `);
     }
