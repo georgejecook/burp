@@ -15,7 +15,6 @@
     "debug": "latest",
     "fs-extra": "^5.0.0",
     "glob-all": "^3.1.0",
-    "glob-fs": "^0.1.7",
     "lodash": "latest",
     "os": "^0.1.1",
     "replace-ext": "^1.0.0",
