@@ -38,7 +38,6 @@ The following working gulpfile can be found in my [roku MVVM spike](https://gith
  export function addDevLogs(cb) {
   let config: BurpConfig = {
     "sourcePath": "build/.roku-deploy-staging",
-    // "sourcePath": "build/wtf",
     "globPattern": "**/*.brs",
     "replacements": [
       {
@@ -64,10 +63,8 @@ The following working gulpfile can be found in my [roku MVVM spike](https://gith
  - Create a config file for your source, such as `burpConfig.json` containing:
 
 ```
-export function addDevLogs(cb) {
-  let config: BurpConfig = {
+{
     "sourcePath": "build/.roku-deploy-staging",
-    // "sourcePath": "build/wtf",
     "globPattern": "**/*.brs",
     "replacements": [
       {
@@ -80,10 +77,7 @@ export function addDevLogs(cb) {
       }
     ]
   }
-  const processor = new BurpProcessor(config);
-  processor.processFiles();
-  cb();
-}
+
 ```
  - Execute Burp `burp burpConfig.json`
 
