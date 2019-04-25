@@ -5,6 +5,7 @@ Burp - Lightweight script processing for Roku brightscript projects
 
 [![codecov](https://codecov.io/gh/georgejecook/burp/branch/master/graph/badge.svg)](https://codecov.io/gh/georgejecook/burp) [![Build Status](https://travis-ci.org/georgejecook/burp.svg?branch=master)](https://travis-ci.org/georgejecook/burp)
 [![GitHub](https://img.shields.io/github/release/georgejecook/burp.svg?style=flat-square)](https://github.com/georgejecook/burp/releases) 
+[![NPM](https://nodei.co/npm/burp-brightscript.png)](https://npmjs.org/package/burp-brightscrip)
 
 ## Links
  - **[Documentation](documentation)**
@@ -25,44 +26,68 @@ It's a simple tool for executing regex replacements on source code files, a bit 
 
 ## Usage
 
+### From javascript/typescript/node
+
+#### Gulp typescript example
+
+The following working gulpfile can be found in my [roku MVVM spike](https://github.com/georgejecook/rokuNavSpike/tree/feature/viewModels); but the process is as follows.
+
+ - `npm install burp-brightscript --save-dev`
+ - Add the following to the top of gulpfile.ts `import { BurpConfig, BurpProcessor } from "burp-brightscript";
+ - Create a task to process your files, with the desired regex replacements, such as:
+
+ ```
+ export function addDevLogs(cb) {
+  let config: BurpConfig = {
+    "sourcePath": "build/.roku-deploy-staging",
+    // "sourcePath": "build/wtf",
+    "globPattern": "**/*.brs",
+    "replacements": [
+      {
+        "regex": "(^.*(logInfo|logError|logVerbose|logDebug)\\((\\s*\"))",
+        "replacement": "$1#FullPath# "
+      },
+      {
+        "regex": "(^.*(logMethod)\\((\\s*\"))",
+        "replacement": "$1#FullPath# "
+      }
+    ]
+  }
+  const processor = new BurpProcessor(config);
+  processor.processFiles();
+  cb();
+}
+```
+
+
 ### From command line
 
  - Install burp globally with `npm install -g burp-brightscript`
  - Create a config file for your source, such as `burpConfig.json` containing:
 
 ```
-{
-  sourcePath: "relative/or/absolute/path/of/your/source",
-  globPattern: "**/*.brs",
-  replacements: [
-    {
-      regex: "(^.*\?\s*\")",
-      replacement: '$1#FileName#.#FunctionName#(#LineNumber#) '
+export function addDevLogs(cb) {
+  let config: BurpConfig = {
+    "sourcePath": "build/.roku-deploy-staging",
+    // "sourcePath": "build/wtf",
+    "globPattern": "**/*.brs",
+    "replacements": [
+      {
+        "regex": "(^.*(logInfo|logError|logVerbose|logDebug)\\((\\s*\"))",
+        "replacement": "$1#FullPath# "
+      },
+      {
+        "regex": "(^.*(logMethod)\\((\\s*\"))",
+        "replacement": "$1#FullPath# "
       }
-  ]
-      
+    ]
+  }
+  const processor = new BurpProcessor(config);
+  processor.processFiles();
+  cb();
 }
 ```
  - Execute Burp `burp burpConfig.json`
-
-### From a node enviroment
-
- - Create a `BurpProcessor` with the required json config
- - call `processor.processFiles()`, which returns true if no errors were encountered. `processor.warnings`, and `processor.errors` contain any processing errors and warnings.
- -  Example:
-
-```
-	import BurpProcessor from 'burp-brightscript';
-	
-    config = {
-      sourcePath: targetPath,
-      globPattern: '**/*.brs',
-      replacements: [{
-        regex: '(^.*\\?\\s*\\")',
-        replacement: '$1#FileName#.#FunctionName#(#LineNumber#) '
-      }];
-      let result = processor.processFiles();
-```
 
 ### Replacement values
 You can use the following constants in your regex replacements:
