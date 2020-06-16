@@ -1,3 +1,9 @@
+#### 0.4.0 (2020-06-16)
+
+##### New Features
+
+* **core:**  Adds Brighterscript support - bs filenames are renamed to .brs (4996ad2e)
+
 # burp-brightscript CHANGELOG
 
 ## 0.3.2
