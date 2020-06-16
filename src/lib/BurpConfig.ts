@@ -6,6 +6,6 @@ export interface BurpReplacement {
 
 export interface BurpConfig {
   sourcePath?: string;
-  globPattern?: string;
+  filePattern?: string[];
   replacements?: BurpReplacement[];
 }

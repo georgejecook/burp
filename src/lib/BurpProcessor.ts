@@ -1,7 +1,6 @@
 import * as Debug from 'debug';
-
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import { inspect } from 'util';
 
 import { BurpConfig } from './BurpConfig';
 import FileDescriptor from './FileDescriptor';
@@ -20,18 +19,18 @@ export class BurpProcessor {
       throw new Error('sourcePath is empty');
     }
     this._config = config;
-    console.log(`Starting directory: ${process.cwd()} sourcePath ${this._config.sourcePath}`);
+    debug(`Starting directory: ${process.cwd()} sourcePath ${this._config.sourcePath}`);
     try {
       process.chdir(this._config.sourcePath);
     } catch (err) {
-      console.log('Could not change directory to source path: ' + err);
+      debug('Could not change directory to source path: ' + err);
       throw new Error('Aborting');
     }
     this._rootPath = process.cwd();
-    console.log('Set working directory to : ' + process.cwd());
+    debug('Set working directory to : ' + process.cwd());
     this._warnings = [];
     this._errors = [];
-    this._config.globPattern = this._config.globPattern || '**/*.brs';
+    this._config.filePattern = this._config.filePattern || ['**/*.brs'];
   }
 
   private readonly _config: BurpConfig;
@@ -49,13 +48,14 @@ export class BurpProcessor {
 
   public processFiles(): boolean {
     debug(`Running Config is ${this._config} `);
-    debug( `path ${this._config.sourcePath} `);
+    debug(`path ${this._config.sourcePath} `);
     debug(`rootpath ${this._rootPath} `);
 
     let fileProcessor = new FileProcessor(this._config);
     fileProcessor.rootPath = process.cwd();
-    let files = glob.sync(this._config.globPattern);
-    files.forEach( (file) => {
+    let files = glob.sync(this._config.filePattern);
+    debug(inspect(files));
+    files.forEach((file) => {
       debug(`file ${file}, ${path.resolve(file)}`);
       const fileDescriptor = new FileDescriptor(path.dirname(path.resolve(file)), path.basename(file), path.extname(file).toLowerCase());
       let result = fileProcessor.processFile(fileDescriptor);
@@ -79,7 +79,7 @@ export class BurpProcessor {
 
     ======
     `);
-      this.errors.forEach( (errorText) => debug(`[ERROR] ${errorText}`));
+      this.errors.forEach((errorText) => debug(`[ERROR] ${errorText}`));
       debug(`
     ======
     `);
@@ -94,7 +94,7 @@ export class BurpProcessor {
 
     ======
     `);
-      this.warnings.forEach( (errorText) => debug(`[WARN] ${errorText}`));
+      this.warnings.forEach((errorText) => debug(`[WARN] ${errorText}`));
       debug(`
     ======
     `);

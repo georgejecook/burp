@@ -22,6 +22,13 @@ You might want to help! Get in touch via the slack group, or raise issues.
 
 It's a simple tool for executing regex replacements on source code files, a bit like _awk_. The killer feature is that it understands brightscript syntax, so it knows what line and function it's in. It can be used from command line, or from a js environment (such as when using  gulp for building)
 
+## What kinds of things can you do with it?
+
+ - Add line numbers to log calls in your files, or disable logs
+ - Prevent further asserts executing in unit tests, if a test has failed
+ - Replace tokens in your files
+ - and more
+ 
 ## Usage
 
 ### From javascript/typescript/node
@@ -38,7 +45,7 @@ The following working gulpfile can be found in my [roku MVVM spike](https://gith
  export function addDevLogs(cb) {
   let config: BurpConfig = {
     "sourcePath": "build/.roku-deploy-staging",
-    "globPattern": "**/*.brs",
+    "globPattern": ["**/*.brs","**/*.bs"],
     "replacements": [
       {
         "regex": "(^.*(logInfo|logError|logVerbose|logDebug)\\((\\s*\"))",
@@ -65,7 +72,7 @@ The following working gulpfile can be found in my [roku MVVM spike](https://gith
 ```
 {
     "sourcePath": "build/.roku-deploy-staging",
-    "globPattern": "**/*.brs",
+    "globPattern": ["**/*.brs"],
     "replacements": [
       {
         "regex": "(^.*(logInfo|logError|logVerbose|logDebug)\\((\\s*\"))",
@@ -82,6 +89,7 @@ The following working gulpfile can be found in my [roku MVVM spike](https://gith
  - Execute Burp `burp burpConfig.json`
 
 ### Replacement values
+
 You can use the following constants in your regex replacements:
 
  - `#FullPath#` - full path of file
@@ -91,8 +99,55 @@ You can use the following constants in your regex replacements:
  - `#CommentLine#` - will result in the line being commented out
  
 ## Why call it Burp?
+
 I like the name. It doesn't mean anything.
 
+## Using with .bs files
+
+Note, you should invoke burp BEFORE you transpile, until further notice - this is because the line numbers will be completely wrong in your transpiled code.
+Burp will rename all file paths in the output from .bs to .brs
+Here's a gulp example of how you can achieve this (please feel free to put up a pr with docs improvements, for a better suggestion) - the following is for mac/linux:
+
+```
+export async function compile(cb) {
+  // copy all sources to tmp folder
+  // so we can add the line numbers to them prior to transpiling
+  await copyFiles();
+  await sleep(100);
+  await applyBurpPreprocessing();
+  let builder = new ProgramBuilder();
+  await builder.run({
+    stagingFolderPath: outDir,
+    createPackage: false,
+    "rootDir": tmpBuildDir,
+    "autoImportComponentScript": true,
+  });
+}
+
+  public async copyFiles() {
+    let oldPath = path.resolve(process.cwd());
+    try {
+      let outPath = path.resolve(this.config.outputPath);
+      fs.mkdirSync(this.config.outputPath);
+
+      let sourcePaths = this.config.sourcePaths.map((p) => {
+        p = path.resolve(p);
+        p = p.endsWith('/') ? p : p + '/';
+        if (!fs.existsSync(p)) {
+          feedbackError(new File(p, '', '', ''), `cannot find source path  ${p}`, true);
+        }
+        return p;
+      }).join(' ');
+
+      await exec(`rsync -az ${sourcePaths} ${outPath}`);
+      console.log(`files copied to ${outPath} dir is now ${process.cwd()}`);
+    } catch (err) {
+      console.error(err);
+    }
+    process.chdir(oldPath);
+  }
+
+```
 
 ## Why did you make this?
 

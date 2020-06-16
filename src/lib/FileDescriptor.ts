@@ -20,6 +20,8 @@ export default class FileDescriptor {
     switch (this.extension.toLowerCase()) {
       case '.brs':
         return FileType.Brs;
+      case '.bs':
+        return FileType.Bs;
       default:
         return FileType.Other;
     }
@@ -32,6 +34,7 @@ export default class FileDescriptor {
   public getPackagePath(projectRoot: string, cwd: string) {
     let pkgPath = `pkg:${this.fullPath.replace(projectRoot, '')}`;
     pkgPath = pkgPath.replace(cwd, '');
+    pkgPath = pkgPath.replace('.bs', '.brs');
     return pkgPath.replace('pkg://', 'pkg:/');
   }
 

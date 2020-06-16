@@ -8,12 +8,10 @@ import { BurpConfig } from './BurpConfig';
 import { BurpProcessor } from './BurpProcessor';
 
 const chaiSubset = require('chai-subset');
-let dircompare = require('dir-compare');
 
 chai.use(chaiSubset);
 let processor: BurpProcessor;
 let sourcePath = path.resolve(__dirname, '../test/stubProject');
-let testsPath = 'build/source/tests';
 let targetPath = 'build';
 
 function clearFiles() {
@@ -36,7 +34,7 @@ describe('BurpProcessor tests', function() {
     copyFiles();
     config = {
       sourcePath: targetPath,
-      globPattern: '**/*.brs',
+      filePattern: ['**/*.brs'],
       replacements: []
     };
     processor = new BurpProcessor(config);
