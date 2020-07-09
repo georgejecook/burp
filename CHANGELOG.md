@@ -1,3 +1,9 @@
+#### 0.4.2 (2020-07-09)
+
+##### Bug Fixes
+
+* **FileProcessor:**  Removes erroneous log output (70e6b458)
+
 #### 0.4.1 (2020-07-09)
 
 ##### New Features
