@@ -4,5 +4,5 @@ export enum MacroValue {
   FileName = '#FileName#',
   FunctionName = '#FunctionName#',
   CommentLine = '#CommentLine#',
-  FullLocation = '#Location#'
+  SourceLocation = 'source_location'
 }
