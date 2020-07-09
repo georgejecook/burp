@@ -100,7 +100,6 @@ export class FileProcessor {
             }
 
             line = line.replace(new RegExp(replacement.regex, 'ig'), replacementValue);
-            console.log(line);
             isDirty = true;
           }
         }
